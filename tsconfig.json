@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["esnext"],
+    "sourceMap": true,
+    "outDir": "bld",
+    "rootDir": "src",
+    "importHelpers": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node"],
+    "preserveSymlinks": true,
+    "experimentalDecorators": true,
+    "plugins": [{"name": "tslint-language-service"}]
+  }
+}
