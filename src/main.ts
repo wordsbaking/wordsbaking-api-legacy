@@ -1,37 +1,11 @@
-import {graphiqlExpress, graphqlExpress} from 'apollo-server-express';
-import * as BodyParser from 'body-parser';
-import * as express from 'express';
-import {GraphQLObjectType, GraphQLSchema, GraphQLString} from 'graphql';
+import 'source-map-support/register';
 
-const app = express();
+import {app} from './entrances';
 
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-      hello: {
-        type: GraphQLString,
-        resolve() {
-          return 'world!';
-        },
-      },
-    },
-  }),
+import * as logger from './logger';
+
+const {PORT} = process.env;
+
+const server = app.listen(PORT || 1337, () => {
+  logger.info(`Listening on port ${server.address().port}...`);
 });
-
-app.use(
-  '/graphql',
-  BodyParser.json(),
-  graphqlExpress({
-    schema,
-  }),
-);
-
-app.use(
-  '/graphiql',
-  graphiqlExpress({
-    endpointURL: '/graphql',
-  }),
-);
-
-app.listen(process.env.PORT || 1337);
