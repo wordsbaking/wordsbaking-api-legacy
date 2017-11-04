@@ -11,8 +11,8 @@ passport.use(
       apiKeyField: 'apiKey',
       apiKeyHeader: 'x-api-key',
     },
-    (key: APIKey, done) => {
-      getUserByAPIKey(key).then(
+    (key, done) => {
+      getUserByAPIKey(key as APIKey).then(
         user => done(undefined, user),
         error => done(error),
       );

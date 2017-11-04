@@ -1,3 +1,7 @@
+interface Dict<T> {
+  [key: string]: T;
+}
+
 type TypedString<T extends string> = string & T;
 
 type EmailString = TypedString<'__email'>;

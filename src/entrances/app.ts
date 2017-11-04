@@ -17,8 +17,14 @@ import {sessionMiddleware} from './session-middleware';
 import Request = express.Request;
 import Response = express.Response;
 import RequestHandler = express.RequestHandler;
+import {UserRequest} from '../core/user';
 
 export const app = express();
+
+app.use((req, _res, next) => {
+  req.timestamp = Date.now();
+  next();
+});
 
 app.use(sessionMiddleware);
 
@@ -40,12 +46,18 @@ app.use(
 app.post('/sign-up', route(API.routeSignUp));
 app.post('/sign-in', route(API.routeSignIn));
 
-type RouteHandler = (req: Request, res: Response) => Promise<any>;
+app.post(
+  '/sync',
+  passport.authenticate('localapikey', {session: false}),
+  route(API.routeSync),
+);
+
+type RouteHandler = (req: UserRequest, res: Response) => Promise<any>;
 
 function route(handler: RouteHandler): RequestHandler {
   return async (req: Request, res: Response) => {
     try {
-      let ret = await handler(req, res);
+      let ret = await handler(req as UserRequest, res);
 
       if (!res.headersSent) {
         res.json({data: ret});

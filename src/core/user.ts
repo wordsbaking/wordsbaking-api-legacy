@@ -10,12 +10,27 @@ import {
   UserNotExistsError,
 } from '../error';
 
-import {APIKey, APIKeyModel, UserDocument, UserModel, UserOID} from '../model';
+import {
+  APIKey,
+  APIKeyModel,
+  UserDocument,
+  UserID,
+  UserModel,
+  UserOID,
+} from '../model';
 
 const API_KEY_EXPIRATION = 30 * 24 * 3600 * 1000;
 
-export interface UserContext {
-  doc: UserDocument;
+export class UserContext {
+  constructor(private doc: UserDocument) {}
+
+  get id(): UserID {
+    return this.doc.id;
+  }
+
+  get oid(): UserOID {
+    return this.doc._id;
+  }
 }
 
 export interface UserRequest extends Request {
@@ -55,9 +70,7 @@ export async function getUserByAPIKey(
     throw new InvalidAPIKeyError();
   }
 
-  return {
-    doc: userDoc,
-  };
+  return new UserContext(userDoc);
 }
 
 export interface SignUpOptions {

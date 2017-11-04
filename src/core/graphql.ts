@@ -8,7 +8,6 @@ export const schema = buildSchema(`
   ${[UserGraphQLSchema].join()}
 
   type Query {
-    hello: String
     user: User
   }
 `);
@@ -19,7 +18,6 @@ export interface UserQueryArgs {
 
 export const rootValue = {
   async user(_args: UserQueryArgs, {user}: UserRequest): Promise<User> {
-    return user.doc;
+    return user as any;
   },
-  async sync(): Promise<void> {},
 };
