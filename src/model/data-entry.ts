@@ -17,7 +17,7 @@ const dataEntrySchema = new Mongoose.Schema(
 
 export type DataEntryCategory = TypedString<'data-entry-category'>;
 export type DataEntryName = TypedString<'data-entry-name'>;
-export type DataEntryType = TypedString<'data-entry-type'>;
+export type DataEntryType = 'value' | 'accumulation';
 
 export interface DataEntry {
   name: DataEntryName;

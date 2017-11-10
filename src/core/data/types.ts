@@ -9,15 +9,15 @@ export abstract class DataEntryTypeDefinition {
 
 export class ValueDataEntryTypeDefinition extends DataEntryTypeDefinition {
   constructor() {
-    super('value' as DataEntryType);
+    super('value');
   }
 
   resolve(data: any): any {
     return data;
   }
 
-  merge(_data: any, change: any): any {
-    return change;
+  merge(_data: any, update: any): any {
+    return update;
   }
 }
 
@@ -26,14 +26,14 @@ export interface AccumulationData {
   value: any;
 }
 
-export interface AccumulationChange {
+export interface AccumulationUpdateData {
   id: any;
   value: any;
 }
 
 export class AccumulationDataEntryTypeDefinition extends DataEntryTypeDefinition {
   constructor() {
-    super('accumulation' as DataEntryType);
+    super('accumulation');
   }
 
   resolve(data: AccumulationData | undefined): any {
@@ -42,7 +42,7 @@ export class AccumulationDataEntryTypeDefinition extends DataEntryTypeDefinition
 
   merge(
     data: AccumulationData | undefined,
-    changes: AccumulationChange[],
+    updates: AccumulationUpdateData[],
   ): AccumulationData {
     if (!data || !Array.isArray(data.ids)) {
       data = {
@@ -54,7 +54,7 @@ export class AccumulationDataEntryTypeDefinition extends DataEntryTypeDefinition
     let idSet = new Set(data.ids);
     let currentValue = data.value;
 
-    for (let {id, value} of changes) {
+    for (let {id, value} of updates) {
       if (idSet.has(id)) {
         continue;
       }
