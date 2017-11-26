@@ -1,4 +1,5 @@
 import * as BodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as express from 'express';
 import * as graphqlHTTP from 'express-graphql';
 
@@ -25,6 +26,8 @@ app.use((req, _res, next) => {
   req.timestamp = Date.now();
   next();
 });
+
+app.use('*', cors());
 
 app.use(sessionMiddleware);
 

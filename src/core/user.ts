@@ -88,7 +88,7 @@ export async function signUp({
 }: SignUpOptions): Promise<SignUpInfo> {
   let encryptedPassword = await Bcrypt.hash(password, 10);
 
-  let ret = await UserModel.update(
+  let {upserted} = await UserModel.update(
     {email},
     {
       $setOnInsert: {
@@ -99,7 +99,7 @@ export async function signUp({
     {upsert: true},
   );
 
-  let entry = ret.upserted[0];
+  let entry = upserted && upserted[0];
 
   if (!entry) {
     throw new UserExistsError();

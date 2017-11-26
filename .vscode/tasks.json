@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "identifier": "build",
+      "label": "build",
       "type": "typescript",
       "tsconfig": "tsconfig.json",
       "option": "watch",
@@ -11,6 +11,14 @@
         "isDefault": true
       },
       "problemMatcher": ["$tsc-watch"]
+    },
+    {
+      "label": "serve",
+      "isBackground": true,
+      "type": "shell",
+      "command": "nodemon",
+      "args": ["bld/main.js"],
+      "problemMatcher": []
     }
   ]
 }
