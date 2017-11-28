@@ -71,7 +71,7 @@ function route(handler: RouteHandler): RequestHandler {
 
         res.json({
           error: {
-            name: error.name,
+            code: error.name,
             message: error.message,
           },
         });
@@ -81,7 +81,7 @@ function route(handler: RouteHandler): RequestHandler {
 
         res.json({
           error: {
-            name: 'UnknownError',
+            code: 'UnknownError',
             message: 'An unknown error occurred',
           },
         });

@@ -60,13 +60,28 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/glob@^5.0.33":
+  version "5.0.33"
+  resolved "http://registry.npm.taobao.org/@types/glob/download/@types/glob-5.0.33.tgz#3dff7c6ce09d65abe919c7961dc3dee016f36ad7"
+  dependencies:
+    "@types/minimatch" "*"
+    "@types/node" "*"
+
 "@types/graphql@^0.11.5":
   version "0.11.5"
   resolved "http://registry.npm.taobao.org/@types/graphql/download/@types/graphql-0.11.5.tgz#e70f051e80b299be5b12f7e60d962f30c9596072"
 
+"@types/lodash@^4.14.85":
+  version "4.14.85"
+  resolved "http://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.85.tgz#a16fbf942422f6eca5622b6910492c496c35069b"
+
 "@types/mime@*":
   version "2.0.0"
   resolved "http://registry.npm.taobao.org/@types/mime/download/@types/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
+
+"@types/minimatch@*":
+  version "3.0.1"
+  resolved "http://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.1.tgz#b683eb60be358304ef146f5775db4c0e3696a550"
 
 "@types/mongodb@*":
   version "2.2.15"
@@ -616,7 +631,7 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-glob@^7.0.5, glob@^7.1.1:
+glob@^7.0.5, glob@^7.1.1, glob@^7.1.2:
   version "7.1.2"
   resolved "http://registry.npm.taobao.org/glob/download/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
   dependencies:
@@ -778,7 +793,7 @@ kareem@1.5.0:
   version "1.5.0"
   resolved "http://registry.npm.taobao.org/kareem/download/kareem-1.5.0.tgz#e3e4101d9dcfde299769daf4b4db64d895d17448"
 
-lodash@^4.14.0:
+lodash@^4.14.0, lodash@^4.17.4:
   version "4.17.4"
   resolved "http://registry.npm.taobao.org/lodash/download/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
