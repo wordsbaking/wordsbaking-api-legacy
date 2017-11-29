@@ -7,6 +7,8 @@ const userSchema = new Mongoose.Schema(
     password: String,
     profile: {
       displayName: String,
+      avatar: String,
+      tagline: String,
     },
     data: {
       activeCollection: String,
@@ -18,6 +20,8 @@ const userSchema = new Mongoose.Schema(
 
 export interface UserProfile {
   displayName: string;
+  avatar: string;
+  tagline: string;
 }
 
 export interface UserData {
@@ -50,6 +54,8 @@ export const UserModel = Mongoose.model<UserDocument>('User', userSchema);
 export const UserGraphQLSchema = `
   type UserProfile {
     displayName: String
+    avatar: String
+    tagline: String
   }
 
   type UserData {

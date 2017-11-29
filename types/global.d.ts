@@ -13,6 +13,8 @@ type TypedNumber<T extends string> = number & {__type: T};
 
 type TimeNumber = TypedNumber<'__time'>;
 
+type OSSObjectUID = TypedString<'__oss-object-uid'>;
+
 type Primitive = string | number | boolean;
 type Nullable = undefined | null;
 

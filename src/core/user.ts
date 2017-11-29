@@ -1,5 +1,4 @@
 import * as Crypto from 'crypto';
-
 import * as Bcrypt from 'bcrypt';
 import {Request} from 'express';
 
@@ -17,6 +16,7 @@ import {
   UserID,
   UserModel,
   UserOID,
+  UserProfile,
 } from '../model';
 
 const API_KEY_EXPIRATION = 30 * 24 * 3600 * 1000;
@@ -148,4 +148,28 @@ export async function generateAPIKey(oid: UserOID): Promise<APIKey> {
   });
 
   return key;
+}
+
+export async function updateProfile(
+  userId: UserID,
+  avatar: string | undefined,
+  displayName: string,
+  tagline: string,
+): Promise<UserProfile> {
+  let doc = await UserModel.findById(userId);
+
+  if (!doc) {
+    throw new UserNotExistsError();
+  }
+
+  if (avatar) {
+    doc.profile.avatar = avatar;
+  }
+
+  doc.profile.displayName = displayName;
+  doc.profile.tagline = tagline;
+
+  await doc.save();
+
+  return doc.profile;
 }

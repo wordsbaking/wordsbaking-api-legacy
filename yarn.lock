@@ -27,6 +27,10 @@
     "@types/express-session" "*"
     "@types/redis" "*"
 
+"@types/content-disposition@^0.5.2":
+  version "0.5.2"
+  resolved "http://registry.npm.taobao.org/@types/content-disposition/download/@types/content-disposition-0.5.2.tgz#18ccb0fd126808e498a820cb8149c0072a2b9066"
+
 "@types/cors@^2.8.3":
   version "2.8.3"
   resolved "http://registry.npm.taobao.org/@types/cors/download/@types/cors-2.8.3.tgz#eaf6e476da0d36bee6b061a24d57e343ddce86d6"
@@ -146,6 +150,12 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/uuid@^3.4.3":
+  version "3.4.3"
+  resolved "http://registry.npm.taobao.org/@types/uuid/download/@types/uuid-3.4.3.tgz#121ace265f5569ce40f4f6d0ff78a338c732a754"
+  dependencies:
+    "@types/node" "*"
 
 "@types/validator@^6.3.0":
   version "6.3.0"
@@ -468,7 +478,7 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/console-control-strings/download/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
 
-content-disposition@0.5.2:
+content-disposition@0.5.2, content-disposition@^0.5.2:
   version "0.5.2"
   resolved "http://registry.npm.taobao.org/content-disposition/download/content-disposition-0.5.2.tgz#0cf68bb9ddf5f2be7961c3a85178cb85dba78cb4"
 

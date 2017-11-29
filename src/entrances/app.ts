@@ -1,5 +1,6 @@
 import * as BodyParser from 'body-parser';
 import * as cors from 'cors';
+import * as multer from 'multer';
 import * as express from 'express';
 import * as graphqlHTTP from 'express-graphql';
 
@@ -53,6 +54,13 @@ app.post(
   '/sync',
   passport.authenticate('localapikey', {session: false}),
   route(API.routeSync),
+);
+
+app.post(
+  '/update-profile',
+  passport.authenticate('localapikey', {session: false}),
+  multer({storage: multer.memoryStorage()}).single('avatar'),
+  route(API.routeUpdateProfile),
 );
 
 type RouteHandler = (req: UserRequest, res: Response) => Promise<any>;
