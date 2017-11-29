@@ -1,0 +1,17 @@
+import {Wrapper} from 'ali-oss';
+
+const {
+  ALIYUN_OSS_USER_CONTENT_BUCKET,
+  ALIYUN_OSS_USER_CONTENT_KEY,
+  ALIYUN_OSS_USER_CONTENT_SECRET,
+  ALIYUN_OSS_USER_CONTENT_REGION,
+  ALIYUN_OSS_USER_CONTENT_INTERNAL,
+} = process.env;
+
+export const userContentOSS = new Wrapper({
+  bucket: ALIYUN_OSS_USER_CONTENT_BUCKET!,
+  accessKeyId: ALIYUN_OSS_USER_CONTENT_KEY!,
+  accessKeySecret: ALIYUN_OSS_USER_CONTENT_SECRET!,
+  region: ALIYUN_OSS_USER_CONTENT_REGION,
+  internal: ALIYUN_OSS_USER_CONTENT_INTERNAL === 'true',
+});
