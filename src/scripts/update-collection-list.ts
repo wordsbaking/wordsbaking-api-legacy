@@ -3,7 +3,7 @@
 /*
  * Script: update-collection-list
  *
- * This script generates `/data/app/collection-list.json` of collections inside
+ * This script generates `/data/app/collectionList.json` of collections inside
  * `/data/collections`.
  */
 
@@ -17,7 +17,7 @@ const DATA_DIR = Path.join(__dirname, '../../data');
 const APP_DATA_DIR = Path.join(DATA_DIR, 'app');
 const COLLECTIONS_DATA_DIR = Path.join(DATA_DIR, 'collections');
 
-const COLLECTION_LIST_PATH = Path.join(APP_DATA_DIR, 'collection-list.json');
+const COLLECTION_LIST_PATH = Path.join(APP_DATA_DIR, 'collectionList.json');
 
 let items = glob
   .sync('*.json', {
