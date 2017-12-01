@@ -1,5 +1,5 @@
-import * as Crypto from 'crypto';
 import * as Bcrypt from 'bcrypt';
+import * as Crypto from 'crypto';
 import {Request} from 'express';
 
 import {
@@ -79,6 +79,8 @@ export interface SignUpOptions {
 }
 
 export interface SignUpInfo {
+  userId: UserID;
+  account: EmailString;
   apiKey: APIKey;
 }
 
@@ -106,7 +108,9 @@ export async function signUp({
   }
 
   return {
+    userId: entry._id,
     apiKey: await generateAPIKey(entry._id),
+    account: email,
   };
 }
 
@@ -116,6 +120,8 @@ export interface SignInOptions {
 }
 
 export interface SignInInfo {
+  userId: UserID;
+  account: string;
   apiKey: APIKey;
 }
 
@@ -129,11 +135,13 @@ export async function signIn({
     throw new UserNotExistsError();
   }
 
-  if (!Bcrypt.compare(password, doc.password)) {
+  if (!await Bcrypt.compare(password, doc.password)) {
     throw new PasswordMismatchError();
   }
 
   return {
+    userId: doc.id,
+    account: email,
     apiKey: await generateAPIKey(doc._id),
   };
 }
