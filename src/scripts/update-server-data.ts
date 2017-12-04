@@ -62,7 +62,7 @@ for (let [category, names] of categoryToNamesMap) {
           doc.removed = undefined;
           doc.markModified('data');
         }
-      } else {
+      } else if (!doc.removed) {
         doc.data = undefined;
         doc.markModified('data');
         doc.removed = true;
