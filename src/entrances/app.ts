@@ -15,10 +15,12 @@ import {
 import {passport} from './passport';
 import {sessionMiddleware} from './session-middleware';
 
+import {UserRequest} from '../core/user';
+
 import Request = express.Request;
 import Response = express.Response;
+import NextFunction = express.NextFunction;
 import RequestHandler = express.RequestHandler;
-import {UserRequest} from '../core/user';
 
 export const app = express();
 
@@ -49,22 +51,41 @@ app.use(
 app.post('/sign-up', route(API.routeSignUp));
 app.post('/sign-in', route(API.routeSignIn));
 
-app.post(
-  '/sync',
-  passport.authenticate('localapikey', {session: false}),
-  route(API.routeSync),
-);
+app.post('/sync', passportAuthenticate(), route(API.routeSync));
 
 app.post(
   '/update-profile',
-  passport.authenticate('localapikey', {session: false}),
+  passportAuthenticate(),
   route(API.routeUploadAvatar),
 );
+
+app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
+  if (error instanceof ExpectedError) {
+    logger.info(error.name, req.url, req.body);
+
+    res.json({
+      error: {
+        code: error.name,
+        message: error.message,
+      },
+    });
+  } else {
+    logger.error((error && error.stack) || error);
+    logger.error(req.url, req.body);
+
+    res.json({
+      error: {
+        code: 'UnknownError',
+        message: 'An unknown error occurred',
+      },
+    });
+  }
+});
 
 type RouteHandler = (req: UserRequest, res: Response) => Promise<any>;
 
 function route(handler: RouteHandler): RequestHandler {
-  return async (req: Request, res: Response) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       let ret = await handler(req as UserRequest, res);
 
@@ -72,26 +93,14 @@ function route(handler: RouteHandler): RequestHandler {
         res.json({data: ret});
       }
     } catch (error) {
-      if (error instanceof ExpectedError) {
-        logger.info(error.name, req.url, req.body);
-
-        res.json({
-          error: {
-            code: error.name,
-            message: error.message,
-          },
-        });
-      } else {
-        logger.error((error && error.stack) || error);
-        logger.error(req.url, req.body);
-
-        res.json({
-          error: {
-            code: 'UnknownError',
-            message: 'An unknown error occurred',
-          },
-        });
-      }
+      next(error);
     }
   };
+}
+
+function passportAuthenticate() {
+  return passport.authenticate('localapikey', {
+    session: false,
+    failWithError: true,
+  });
 }
