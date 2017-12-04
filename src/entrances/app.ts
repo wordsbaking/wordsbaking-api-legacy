@@ -52,6 +52,11 @@ app.post('/sign-up', route(API.routeSignUp));
 app.post('/sign-in', route(API.routeSignIn));
 
 app.post('/sync', passportAuthenticate(), route(API.routeSync));
+app.post(
+  '/get-words-data',
+  passportAuthenticate(),
+  route(API.routeGetWordsData),
+);
 
 app.post(
   '/update-profile',
@@ -82,7 +87,7 @@ app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
   }
 });
 
-type RouteHandler = (req: UserRequest, res: Response) => Promise<any>;
+type RouteHandler = (req: UserRequest, res: Response) => any;
 
 function route(handler: RouteHandler): RequestHandler {
   return async (req: Request, res: Response, next: NextFunction) => {
