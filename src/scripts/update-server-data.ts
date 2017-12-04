@@ -11,7 +11,7 @@ import '../entrances/mongoose';
 
 import {DataEntryModel} from '../model/data-entry';
 
-const DATA_DIR = Path.join(__dirname, '../../data');
+const DATA_DIR = Path.join(__dirname, '../../data/sync');
 
 let categoryToNamesMap = new Map(
   FS.readdirSync(DATA_DIR)

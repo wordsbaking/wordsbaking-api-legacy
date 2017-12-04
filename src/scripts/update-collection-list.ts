@@ -12,7 +12,7 @@ import * as Path from 'path';
 
 import * as glob from 'glob';
 
-const DATA_DIR = Path.join(__dirname, '../../data');
+const DATA_DIR = Path.join(__dirname, '../../data/sync');
 
 const APP_DATA_DIR = Path.join(DATA_DIR, 'app');
 const COLLECTIONS_DATA_DIR = Path.join(DATA_DIR, 'collections');
