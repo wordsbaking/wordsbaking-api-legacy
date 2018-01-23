@@ -1,9 +1,12 @@
 import * as Mongoose from 'mongoose';
 
+import {connection} from '../entrances/mongoose';
+
 const userSchema = new Mongoose.Schema(
   {
     email: {type: String, index: true},
     mobile: {type: String, index: true},
+    emailActivated: {type: String, index: true},
     password: String,
     profile: {
       displayName: String,
@@ -32,6 +35,7 @@ export interface UserData {
 export interface User {
   email: string;
   mobile?: string;
+  emailActivated?: boolean;
   profile: UserProfile;
   data: UserData;
 }
@@ -49,7 +53,7 @@ export interface UserDocument extends UserSchema, Mongoose.Document {
   id: UserID;
 }
 
-export const UserModel = Mongoose.model<UserDocument>('User', userSchema);
+export const UserModel = connection.model<UserDocument>('User', userSchema);
 
 export const UserGraphQLSchema = `
   type UserProfile {

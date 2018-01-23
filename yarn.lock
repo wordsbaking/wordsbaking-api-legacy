@@ -1946,6 +1946,12 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+villa@^0.3.1:
+  version "0.3.1"
+  resolved "http://registry.npm.taobao.org/villa/download/villa-0.3.1.tgz#31a00b065fc2a312f1953ec86c8ac2bd4da5d5be"
+  dependencies:
+    tslib "^1.8.0"
+
 vts@^5.8.1:
   version "5.8.1"
   resolved "http://registry.npm.taobao.org/vts/download/vts-5.8.1.tgz#f71c6ecfc380b6b2a69500635280848d49161b21"

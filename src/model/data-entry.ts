@@ -1,4 +1,7 @@
 import * as Mongoose from 'mongoose';
+
+import {connection} from '../entrances/mongoose';
+
 import {UserOID} from './user';
 
 const dataEntrySchema = new Mongoose.Schema(
@@ -40,7 +43,7 @@ export interface DataEntryDocument extends DataEntrySchema, Mongoose.Document {
   id: DataEntryID;
 }
 
-export const DataEntryModel = Mongoose.model<DataEntryDocument>(
+export const DataEntryModel = connection.model<DataEntryDocument>(
   'DataEntry',
   dataEntrySchema,
 );

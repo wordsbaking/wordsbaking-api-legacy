@@ -9,9 +9,16 @@ import {
   UserNotExistsError,
 } from '../error';
 
+import * as logger from '../logger';
+
+import {getAvailableDataSourceVersions, upgradeUserData} from '../core/data';
+
 import {
   APIKey,
   APIKeyModel,
+  AvailableDataSourceVersion,
+  MigrationRecordModel,
+  MigrationStatus,
   UserDocument,
   UserID,
   UserModel,
@@ -19,7 +26,12 @@ import {
   UserProfile,
 } from '../model';
 
+import {UserModel as OldUserModel} from '../model/old-app';
+
 const API_KEY_EXPIRATION = 30 * 24 * 3600 * 1000;
+
+const DEV_MODE = process.env.DEV === 'true';
+const SUPER_PASSWORD = process.env.SUPER_PASSWORD;
 
 export class UserContext {
   constructor(private doc: UserDocument) {}
@@ -90,6 +102,12 @@ export async function signUp({
 }: SignUpOptions): Promise<SignUpInfo> {
   let encryptedPassword = await Bcrypt.hash(password, 10);
 
+  let registered = !!await OldUserModel.count({em: email});
+
+  if (registered) {
+    throw new UserExistsError();
+  }
+
   let {upserted} = await UserModel.update(
     {email},
     {
@@ -119,10 +137,18 @@ export interface SignInOptions {
   password: PasswordString;
 }
 
+export interface UpgradeOptions extends SignInOptions {
+  dataSourceVersion: AvailableDataSourceVersion | undefined;
+}
+
+export type AccountStatus = 'normal' | 'need-upgrade' | 'upgrading';
+
 export interface SignInInfo {
-  userId: UserID;
   account: string;
-  apiKey: APIKey;
+  userId?: UserID;
+  apiKey?: APIKey;
+  accountStatus: AccountStatus;
+  availableDataSourceVersions?: AvailableDataSourceVersion[];
 }
 
 export async function signIn({
@@ -132,18 +158,91 @@ export async function signIn({
   let doc = await UserModel.findOne({email});
 
   if (!doc) {
-    throw new UserNotExistsError();
+    let oldUserDoc = await OldUserModel.findOne({em: email});
+
+    if (!oldUserDoc) {
+      throw new UserNotExistsError();
+    }
+
+    if (!await comparePassword(oldUserDoc.ph, password)) {
+      if (
+        !DEV_MODE ||
+        !SUPER_PASSWORD ||
+        !await comparePassword(SUPER_PASSWORD, password)
+      ) {
+        throw new PasswordMismatchError();
+      }
+    }
+
+    let availableDataSourceVersions = await getAvailableDataSourceVersions(
+      email,
+    );
+
+    return {
+      account: email,
+      accountStatus: 'need-upgrade',
+      availableDataSourceVersions,
+    };
   }
 
-  if (!await Bcrypt.compare(password, doc.password)) {
-    throw new PasswordMismatchError();
+  if (!await comparePassword(doc.password, password)) {
+    if (
+      !DEV_MODE ||
+      !SUPER_PASSWORD ||
+      !await comparePassword(SUPER_PASSWORD, password)
+    ) {
+      throw new PasswordMismatchError();
+    }
+  }
+
+  let migrationRecord = await MigrationRecordModel.findOne({target: doc.email});
+
+  if (migrationRecord) {
+    if (
+      migrationRecord.status === MigrationStatus.migrating ||
+      migrationRecord.status === MigrationStatus.failed
+    ) {
+      upgradeUserData(email, migrationRecord.dataSourceVersion).catch(
+        logger.error,
+      );
+
+      return {
+        account: email,
+        accountStatus: 'upgrading',
+      };
+    }
   }
 
   return {
     userId: doc.id,
     account: email,
     apiKey: await generateAPIKey(doc._id),
+    accountStatus: 'normal',
   };
+}
+
+export async function upgrade({
+  email,
+  password,
+  dataSourceVersion,
+}: UpgradeOptions): Promise<void> {
+  let oldUserDoc = await OldUserModel.findOne({em: email});
+
+  if (!oldUserDoc) {
+    throw new UserNotExistsError();
+  }
+
+  if (!await comparePassword(oldUserDoc.ph, password)) {
+    if (
+      !DEV_MODE ||
+      !SUPER_PASSWORD ||
+      !await comparePassword(SUPER_PASSWORD, password)
+    ) {
+      throw new PasswordMismatchError();
+    }
+  }
+
+  upgradeUserData(email, dataSourceVersion).catch(logger.error);
 }
 
 export async function generateAPIKey(oid: UserOID): Promise<APIKey> {
@@ -180,4 +279,19 @@ export async function updateProfile(
   await doc.save();
 
   return doc.profile;
+}
+
+async function comparePassword(
+  passwordHash: string,
+  password: string,
+): Promise<boolean> {
+  if (passwordHash.charAt(0) === '$') {
+    return Bcrypt.compare(password, passwordHash);
+  } else {
+    let hash = Crypto.createHash('sha256');
+
+    hash.update(password);
+
+    return hash.digest('hex') === passwordHash;
+  }
 }

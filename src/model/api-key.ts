@@ -1,5 +1,7 @@
 import * as Mongoose from 'mongoose';
 
+import {connection} from '../entrances/mongoose';
+
 import {UserOID} from './user';
 
 const apiKeySchema = new Mongoose.Schema(
@@ -27,7 +29,7 @@ export interface APIKeyDocument extends APIKeySchema, Mongoose.Document {
   id: APIKeyID;
 }
 
-export const APIKeyModel = Mongoose.model<APIKeyDocument>(
+export const APIKeyModel = connection.model<APIKeyDocument>(
   'APIKey',
   apiKeySchema,
 );

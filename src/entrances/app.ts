@@ -32,9 +32,7 @@ app.use((req, _res, next) => {
 app.use('*', cors());
 
 app.use(sessionMiddleware);
-
 app.use(BodyParser.json());
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -50,6 +48,13 @@ app.use(
 
 app.post('/sign-up', route(API.routeSignUp));
 app.post('/sign-in', route(API.routeSignIn));
+
+app.post('/migrate-user-data', route(API.routeMigrateUserData));
+
+app.post(
+  '/user-data-migration-status',
+  route(API.routeUserDataMigrationStatus),
+);
 
 app.post('/sync', passportAuthenticate(), route(API.routeSync));
 app.post(
