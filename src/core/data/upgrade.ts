@@ -146,7 +146,7 @@ async function migrateUserDataFrom$V_0_5(
   userDoc: UserDocument,
 ): Promise<void> {
   let userID = userDoc._id;
-  let userIDHex = userDoc._id.toHexString();
+  let sourceUserIDHex = sourceUserDoc._id.toHexString();
   let promises: Promise<any>[] = [];
 
   if (sourceUserDoc.nn) {
@@ -190,14 +190,14 @@ async function migrateUserDataFrom$V_0_5(
   }
 
   let userWords = await OldUserWordModel.find({
-    u: userIDHex,
+    u: sourceUserIDHex,
     r: {$ne: true},
   });
 
   let wordsbookSet = new Set<string>(userWords.map(word => word.t));
 
   let wordRecords = await OldWordRecordModel.find({
-    u: userIDHex,
+    u: sourceUserIDHex,
   });
 
   for (let wordRecord of wordRecords) {
@@ -212,10 +212,22 @@ async function migrateUserDataFrom$V_0_5(
 
     if (wordsbookSet.has(term)) {
       data.w = true;
+      wordsbookSet.delete(term);
     }
 
     upsertRecord(RECORDS, term, data);
   }
+
+  for (let word of wordsbookSet) {
+    upsertRecord(RECORDS, word, {
+      r: '',
+      f: 0,
+      l: 0,
+      w: true,
+    });
+  }
+
+  await Promise.all(promises);
 
   return;
 
@@ -256,9 +268,16 @@ async function migrateUserDataFrom$V_1_0(
   userDoc: UserDocument,
 ): Promise<void> {
   let userID = userDoc._id;
-  let userIDHex = sourceUserDoc._id.toHexString();
-  let dataRecords = await OldDataModel.find({u: userIDHex});
+  let sourceUserIDHex = sourceUserDoc._id.toHexString();
+  let dataRecords = await OldDataModel.find({u: sourceUserIDHex});
   let promises: Promise<any>[] = [];
+
+  let userWords = await OldUserWordModel.find({
+    u: sourceUserIDHex,
+    r: {$ne: true},
+  });
+
+  let wordsbookSet = new Set<string>(userWords.map(word => word.t));
 
   for (let dataRecord of dataRecords) {
     let {
@@ -293,7 +312,7 @@ async function migrateUserDataFrom$V_1_0(
             pictureBufferStream,
             pictureBuffer.byteLength,
             'image/jpeg',
-            `${userIDHex}.jpg`,
+            `${sourceUserIDHex}.jpg`,
             'avatars',
           );
 
@@ -311,6 +330,11 @@ async function migrateUserDataFrom$V_1_0(
         upsertRecord(SETTINGS, name, data, syncAt, updateAt, type);
         break;
       case 'records':
+        if (wordsbookSet.has(name)) {
+          data.w = true;
+          wordsbookSet.delete(name);
+        }
+
         upsertRecord(RECORDS, name, data, syncAt, updateAt, type);
         break;
       case 'statistics':
@@ -345,6 +369,24 @@ async function migrateUserDataFrom$V_1_0(
         break;
     }
   }
+
+  for (let word of wordsbookSet) {
+    let now = Date.now();
+    upsertRecord(
+      RECORDS,
+      word,
+      {
+        r: '',
+        f: 0,
+        l: 0,
+        w: true,
+      },
+      now,
+      now,
+    );
+  }
+
+  await Promise.all(promises);
 
   return;
 
