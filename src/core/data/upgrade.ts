@@ -36,6 +36,8 @@ const CLOCK_IN_STATS = 'clock-in-stats';
 const TAG_LINE = 'tagline';
 const AVATAR = 'avatar';
 
+const AUDIO_MODES = ['off', 'on', 'auto'];
+
 export async function getAvailableDataSourceVersions(
   email: string,
 ): Promise<AvailableDataSourceVersion[]> {
@@ -325,6 +327,10 @@ async function migrateUserDataFrom$V_1_0(
       case 'settings':
         if (name === 'selectedCollections') {
           name = 'collectionIDs';
+        }
+
+        if (name === 'audioMode') {
+          data = AUDIO_MODES[data] || AUDIO_MODES[0];
         }
 
         upsertRecord(SETTINGS, name, data, syncAt, updateAt, type);
