@@ -7,6 +7,8 @@ import * as Path from 'path';
 import * as glob from 'glob';
 import * as _ from 'lodash';
 
+import '../entrances/env';
+
 import '../entrances/mongoose';
 
 import {DataEntryModel} from '../model/data-entry';

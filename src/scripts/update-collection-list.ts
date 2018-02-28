@@ -12,6 +12,8 @@ import * as Path from 'path';
 
 import * as glob from 'glob';
 
+import '../entrances/env';
+
 const DATA_DIR = Path.join(__dirname, '../../data/sync');
 
 const APP_DATA_DIR = Path.join(DATA_DIR, 'app');
