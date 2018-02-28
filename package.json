@@ -7,7 +7,7 @@
     "update-server-data": "node bld/scripts/update-server-data.js",
     "env-up": "docker stack deploy -c docker-compose.dev.yml wb-api",
     "env-down": "docker stack rm wb-api",
-    "build": "tsc",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/bcrypt": "^1.0.0",
