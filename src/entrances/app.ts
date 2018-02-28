@@ -69,6 +69,10 @@ app.post(
   route(API.routeUploadAvatar),
 );
 
+app.post('/latest-app-version', route(API.routeLatestAppVersionInfo));
+app.post('/upgrade-app-version', route(API.routeUpgradeAppVersion));
+app.post('/developer-verify', route(API.routeDeveloperVerify));
+
 app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof ExpectedError) {
     logger.info(error.name, req.url, req.body);

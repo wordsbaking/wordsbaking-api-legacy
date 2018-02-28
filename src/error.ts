@@ -9,3 +9,7 @@ export class InvalidAPIKeyError extends ExpectedError {}
 export class UserExistsError extends ExpectedError {}
 export class UserNotExistsError extends ExpectedError {}
 export class PasswordMismatchError extends ExpectedError {}
+
+export class AppVersionInvalidError extends ExpectedError {}
+
+export class PermissionDeniedError extends ExpectedError {}
