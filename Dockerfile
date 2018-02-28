@@ -8,6 +8,8 @@ ADD package.json /wordsbaking-api/package.json
 RUN yarn install --registry https://registry.npm.taobao.org
 
 ADD bld /wordsbaking-api/bld
+ADD data /wordsbaking-api/data
+ADD .env /wordsbaking-api/.env
 
 EXPOSE 80
 

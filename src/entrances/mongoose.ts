@@ -3,18 +3,27 @@ require('mongoose').Promise = Promise;
 
 import * as Mongoose from 'mongoose';
 
+const {MONGO_HOST, MONGO_DB} = process.env;
+
 export const connection = Mongoose.createConnection(
-  'mongodb://localhost/wordsbaking-migration-test',
+  `mongodb://${MONGO_HOST}/${MONGO_DB}`,
   {
     useMongoClient: true,
   },
 );
 
+const {
+  OLD_MONGO_HOST,
+  OLD_MONGO_DB,
+  OLD_MONGO_USER,
+  OLD_MONGO_PASS,
+} = process.env;
+
 export const oldAppDBConnection = Mongoose.createConnection(
-  'mongodb://118.190.174.227/wordsbaking',
+  `mongodb://${OLD_MONGO_HOST}/${OLD_MONGO_DB}`,
   {
-    user: 'root',
-    pass: '7qm2TwqdpQY*2cQY',
+    user: OLD_MONGO_USER,
+    pass: OLD_MONGO_PASS,
     useMongoClient: true,
   },
 );
