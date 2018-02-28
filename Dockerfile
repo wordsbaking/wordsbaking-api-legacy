@@ -9,7 +9,7 @@ RUN yarn install --registry https://registry.npm.taobao.org
 
 ADD bld /wordsbaking-api/bld
 ADD data /wordsbaking-api/data
-ADD .env /wordsbaking-api/.env
+ADD .env.docker /wordsbaking-api/.env
 
 EXPOSE 80
 
