@@ -77,7 +77,11 @@ app.post('/developer-verify', route(API.routeDeveloperVerify));
 
 app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof ExpectedError) {
-    logger.info(error.name, req.url, req.body);
+    if (DEV) {
+      logger.error(error.name, req.url, req.body);
+    } else {
+      logger.error(error.name, req.url);
+    }
 
     res.json({
       error: {
