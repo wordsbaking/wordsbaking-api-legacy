@@ -22,6 +22,8 @@ import Response = express.Response;
 import NextFunction = express.NextFunction;
 import RequestHandler = express.RequestHandler;
 
+const {dev: DEV} = process.env;
+
 export const app = express();
 
 app.use((req, _res, next) => {
@@ -85,7 +87,12 @@ app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
     });
   } else {
     logger.error((error && error.stack) || error);
-    logger.error(req.url, req.body);
+
+    if (DEV) {
+      logger.error(req.url, req.body);
+    } else {
+      logger.error(req.url);
+    }
 
     res.json({
       error: {
