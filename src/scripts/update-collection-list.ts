@@ -28,9 +28,13 @@ let items = glob
   })
   .map(path => {
     let id = Path.basename(path, '.json');
-    let {name, order}: {name: string; order: number} = require(path);
+    let {
+      name,
+      order,
+      terms,
+    }: {name: string; order: number; terms: string[]} = require(path);
 
-    return {id, name, order};
+    return {id, name, order, count: terms.length};
   })
   .sort((a, b) => {
     return (a.order || 0) - (b.order || 0) || (a.id > b.id ? 1 : -1);
