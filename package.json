@@ -30,7 +30,7 @@
     "@types/uuid": "^3.4.3",
     "@types/validator": "^6.3.0",
     "glob": "^7.1.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "prettier": "^1.7.4",
     "tslint": "^5.8.0",
     "tslint-language-service": "^0.9.6",
